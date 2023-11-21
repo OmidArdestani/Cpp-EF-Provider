@@ -1,0 +1,86 @@
+﻿  AbstractEFProvider.cpp
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(18,27): error C2065: 'QVariant': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(18,10): error C2923: 'std::map': 'QVariant' is not a valid template type argument for parameter '_Ty'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(18): message : see declaration of 'QVariant'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(18,10): error C2976: 'std::map': too few template arguments
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\include\map(73): message : see declaration of 'std::map'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(31,14): error C3646: 'GetPropertie': unknown override specifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(31,26): error C2059: syntax error: '('
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(32,5): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20,31): error C2065: 'QVariant': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20,14): error C2923: 'std::map': 'QVariant' is not a valid template type argument for parameter '_Ty'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20): message : see declaration of 'QVariant'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20,14): error C2976: 'std::map': too few template arguments
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\include\map(73): message : see declaration of 'std::map'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20,1): error C2133: 'returnValue': unknown size
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20,41): error C2512: 'std::map': no appropriate default constructor available
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\include\map(73,1): message : see declaration of 'std::map'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(22,35): error C2039: 'metaObject': is not a member of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(13): message : see declaration of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(24,13): error C2065: 'QString': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(24,22): error C2146: syntax error: missing ';' before identifier 'propName'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(24,22): error C2065: 'propName': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(24,39): error C2039: 'metaObject': is not a member of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(13): message : see declaration of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(25,13): error C2065: 'QVariant': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(25,22): error C2146: syntax error: missing ';' before identifier 'propValue'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(25,22): error C2065: 'propValue': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(25,40): error C2039: 'property': is not a member of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(13): message : see declaration of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(25,55): error C2039: 'metaObject': is not a member of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(13): message : see declaration of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(26,32): error C2065: 'propName': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(26,42): error C2065: 'propValue': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(28,1): error C2440: 'return': cannot convert from 'std::map' to 'std::map'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(28,1): message : Cannot copy construct class 'std::map' due to ambiguous copy constructors or no available copy constructor
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\AbstractEFProvider.h(43,2): warning C4099: 'EFprovider::CBaseEFProvider': type name first seen using 'struct' now seen using 'class'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\AbstractEFProvider.h(42): message : see declaration of 'EFprovider::CBaseEFProvider'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\AbstractEFProvider.cpp(92,26): error C2760: syntax error: unexpected token 'identifier', expected ';'
+  EFProviderDrives.cpp
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(18,27): error C2065: 'QVariant': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(18,10): error C2923: 'std::map': 'QVariant' is not a valid template type argument for parameter '_Ty'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(18): message : see declaration of 'QVariant'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(18,10): error C2976: 'std::map': too few template arguments
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\include\map(73): message : see declaration of 'std::map'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(31,14): error C3646: 'GetPropertie': unknown override specifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(31,26): error C2059: syntax error: '('
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(32,5): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20,31): error C2065: 'QVariant': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20,14): error C2923: 'std::map': 'QVariant' is not a valid template type argument for parameter '_Ty'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20): message : see declaration of 'QVariant'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20,14): error C2976: 'std::map': too few template arguments
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\include\map(73): message : see declaration of 'std::map'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20,1): error C2133: 'returnValue': unknown size
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(20,41): error C2512: 'std::map': no appropriate default constructor available
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\include\map(73,1): message : see declaration of 'std::map'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(22,35): error C2039: 'metaObject': is not a member of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(13): message : see declaration of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(24,13): error C2065: 'QString': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(24,22): error C2146: syntax error: missing ';' before identifier 'propName'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(24,22): error C2065: 'propName': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(24,39): error C2039: 'metaObject': is not a member of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(13): message : see declaration of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(25,13): error C2065: 'QVariant': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(25,22): error C2146: syntax error: missing ';' before identifier 'propValue'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(25,22): error C2065: 'propValue': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(25,40): error C2039: 'property': is not a member of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(13): message : see declaration of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(25,55): error C2039: 'metaObject': is not a member of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(13): message : see declaration of 'CAbstractDatabaseModel'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(26,32): error C2065: 'propName': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(26,42): error C2065: 'propValue': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(28,1): error C2440: 'return': cannot convert from 'std::map' to 'std::map'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\DatabaseModel.h(28,1): message : Cannot copy construct class 'std::map' due to ambiguous copy constructors or no available copy constructor
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\AbstractEFProvider.h(43,2): warning C4099: 'EFprovider::CBaseEFProvider': type name first seen using 'struct' now seen using 'class'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\AbstractEFProvider.h(42): message : see declaration of 'EFprovider::CBaseEFProvider'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\EFProviderDrives.h(6,35): error C3861: 'CAbstractEFProvider': identifier not found
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\EFProviderDrives.h(21): message : see reference to class template instantiation 'CSQLightEFprovider<T>' being compiled
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\EFProviderDrives.h(6,54): error C2143: syntax error: missing ',' before '<'
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\EFProviderDrives.cpp(36,36): error C2065: 'TableName': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\EFProviderDrives.cpp(36,36): error C3861: 'TableName': identifier not found
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\EFProviderDrives.cpp(38,11): error C3861: 'DatabaseObject': identifier not found
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\EFProviderDrives.cpp(45,23): error C2065: 'temp': undeclared identifier
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\EFProviderDrives.cpp(45,23): error C3861: 'temp': identifier not found
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\EFProviderDrives.cpp(47,28): error C3861: 'temp': identifier not found
+C:\Users\OmidHome\source\repos\CppEFProvider\CppEFProvider\EFProviderDrives.cpp(47,76): error C3861: 'temp': identifier not found
+  Generating Code...
