@@ -1,6 +1,7 @@
 # C++ Entity Framework Provider
 
-[![Build Status](https://travis-ci.org/your-username/cpp-ef-provider.svg?branch=master)](https://travis-ci.org/your-username/cpp-ef-provider)
+[![Build Status](https://github.com/Omid91a/CppEFProvider/actions/workflows/msbuild.yml/badge.svg)](https://github.com/Omid91a/CppEFProvider/actions)
+
 
 ## Description
 
