@@ -21,7 +21,7 @@ private:
 		~Value()
 		{
 			if (stringValue) {
-				delete stringValue;
+//				delete stringValue;
 			}
 		}
 	} value;
@@ -123,7 +123,7 @@ private:
 
 	void clearValue() {
 		if (type_ == Type::STRING) {
-			delete value.stringValue;
+//			delete value.stringValue;
 		}
 	}
 

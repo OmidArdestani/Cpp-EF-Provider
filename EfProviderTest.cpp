@@ -1,5 +1,5 @@
 #include <iostream>
-#include "EFProviderDrives.h"
+#include "EFProviderDrives.hpp"
 
 #include <QSqlQuery>
 #include <QDebug>
@@ -14,10 +14,12 @@ class MCountry :public CAbstractDatabaseModel
 
 public:
     MCountry() : CAbstractDatabaseModel(){}
-    void SetName(CVariant name) { Name = name.toType<std::string>(); }
-    CVariant GetName() { return Name; }
-    void SetDisplay(CVariant display) { Display = display.toType<std::string>(); }
-    CVariant GetDisplay() { return Display; }
+    void SetName(CVariant name) { Name = "Test";/*name.toType<std::string>();*/ }
+    CVariant GetName() {
+        return Name; }
+    void SetDisplay(CVariant display) { Display = "Test D";/*display.toType<std::string>();*/ }
+    CVariant GetDisplay() {
+        return Display; }
 };
 
 
@@ -47,6 +49,7 @@ class CSQLightWrapper : public CAbstractSQLDatabase
 {
 public:
     CSQLightWrapper(std::string db_address,std::string database_name) : CAbstractSQLDatabase()
+        ,LastQuery(new QSqlQuery)
     {
         // create db file
         QFile f(QString::fromStdString(db_address));
@@ -67,12 +70,13 @@ public:
     bool Close() override {LocalDatabase.close(); return true;}
     CAbstracSqlDataBaseQuery* Execute(std::string cmd) override
     {
-        auto r = LocalDatabase.exec(QString::fromStdString(cmd));
-        return new QSqlQueryWrapper(&r);
+        *LastQuery = LocalDatabase.exec(QString::fromStdString(cmd));
+        return new QSqlQueryWrapper(LastQuery);
     };
 
 private:
     QSqlDatabase LocalDatabase;
+    QSqlQuery* LastQuery = nullptr;
 };
 }
 
@@ -88,8 +92,8 @@ int main()
     my_country.SetName(CVariant()/*"Malaysia"*/);
     my_country.SetDisplay(CVariant()/*"Malaysia In East Asia"*/);
 
-//    db_provider->Append(my_country);
-//    db_provider->SaveChanges();
+    db_provider->Append(&my_country);
+    db_provider->SaveChanges();
 
     std::cout << "Hello World!\n";
 }

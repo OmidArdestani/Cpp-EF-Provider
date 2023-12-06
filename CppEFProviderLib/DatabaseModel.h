@@ -30,16 +30,13 @@ struct RelationshipItem
 class CAbstractDatabaseModel
 {
 public:
-	virtual CVariant GetId() { return Id; };
-	virtual void SetId(CVariant id) { Id = id.toType<int>(); }
-
-public:
 	std::map<std::string, CVariant> GetAllPropertie()
 	{
 		std::map<std::string, CVariant> all_prop;
 		for (auto item = PropertyMap.cbegin(); item != PropertyMap.cend(); ++item)
 		{
-            all_prop.insert_or_assign(item->first, (*item->second->Getter)());
+            auto prop_value = (*item->second->Getter)();
+            all_prop.insert_or_assign(item->first, prop_value);
 		}
 		return all_prop;
 	}
@@ -48,7 +45,7 @@ public:
 	{
 		auto prop = this->PropertyMap.find(key);
 		if (prop != this->PropertyMap.end())
-            return (*prop->second->Getter)();
+			return (*prop->second->Getter)();
 		else
 			return CVariant();
 	}
@@ -61,7 +58,7 @@ public:
 	template<class T>
 	T* GetRelationship(std::string foreignKey)
 	{
-        for(auto rel = RelationshipList.cbegin(); rel != RelationshipList.cend(); ++rel)
+		for (auto rel = RelationshipList.cbegin(); rel != RelationshipList.cend(); ++rel)
 		{
 			if (rel->ForeignKey == foreignKey)
 			{
@@ -95,8 +92,8 @@ public:
 	}
 
 	void RegisterProperty(std::string property_name, std::function<void(CVariant)>* setter, std::function<CVariant()>* getter)
-    {
-        PropertyMap.insert_or_assign(property_name, new PropContainer());
+	{
+		PropertyMap.insert_or_assign(property_name, new PropContainer(setter, getter));
 	}
 
 private:
@@ -111,8 +108,11 @@ private:
 		std::function<void(CVariant)>* Setter = nullptr;
 		std::function<CVariant()>* Getter = nullptr;
 	};
-    std::map<std::string, PropContainer*> PropertyMap;
-    std::list<RelationshipItem> RelationshipList;
+	std::map<std::string, PropContainer*> PropertyMap;
+	std::list<RelationshipItem> RelationshipList;
 
-    REGISTER_PROPERTY(int, Id, CAbstractDatabaseModel, &CAbstractDatabaseModel::SetId, &CAbstractDatabaseModel::GetId)
+	REGISTER_PROPERTY(int, Id, CAbstractDatabaseModel, &CAbstractDatabaseModel::SetId, &CAbstractDatabaseModel::GetId)
+public:
+	virtual CVariant GetId() { return Id; };
+	virtual void SetId(CVariant id) { Id = id.toType<int>(); }
 };

@@ -15,18 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AbstractEFProvider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EFProviderDrives.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AbstractEFProvider.h">
+    <ClInclude Include="AbstractEFProvider.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EFProviderDrives.h">
+    <ClInclude Include="EFProviderDrives.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DatabaseModel.h">
