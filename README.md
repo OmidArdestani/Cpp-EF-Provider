@@ -1,6 +1,5 @@
 # C++ Entity Framework Provider
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/your-username/cpp-ef-provider.svg?branch=master)](https://travis-ci.org/your-username/cpp-ef-provider)
 
 ## Description
@@ -69,4 +68,5 @@ db_provider->SaveChanges();
 After running the section 3 code, a row will be added to the "MCountry" table.
 
 ## Library Class Diagram (UML)
-![EF-Provider Class Diagram](Class Driagram.png)
+![EF-Provider Class Diagram](https://github.com/Omid91a/CppEFProvider/blob/main/CppEFProviderLib/Class%20Driagram.png)
+
