@@ -41,6 +41,11 @@ public:
 		return all_prop;
 	}
 
+	int PropertyCount()
+	{
+		return 0;
+	}
+
 	CVariant GetProperty(std::string key)
 	{
 		auto prop = this->PropertyMap.find(key);

@@ -1,6 +1,6 @@
 QT += core sql
 
-CONFIG += c++17
+CONFIG += c++20
 
 TEMPLATE = app
 

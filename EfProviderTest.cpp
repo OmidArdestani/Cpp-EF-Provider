@@ -1,5 +1,10 @@
+// Add this line at the top of your source file
+#pragma execution_character_set("utf-8")
+#pragma warning(disable : 5033 4996)
+
 #include <iostream>
-#include "EFProviderDrives.hpp"
+#include "EFDrivers/EFDriverSQLight.hpp"
+#include <AbstractEFProvider.hpp>
 
 #include <QSqlQuery>
 #include <QDebug>
@@ -23,7 +28,7 @@ public:
 };
 
 
-namespace EFprovider{
+namespace EFProvider{
 
 class QSqlQueryWrapper : public CAbstracSqlDataBaseQuery
 {
@@ -53,7 +58,10 @@ public:
     {
         // create db file
         QFile f(QString::fromStdString(db_address));
-        if(f.open(QIODevice::ReadWrite));
+
+        if(!f.open(QIODevice::ReadWrite))
+            assert(false);
+
         // initialize db file
         LocalDatabase = QSqlDatabase::addDatabase("QSQLITE");
         LocalDatabase.setHostName(QString::fromStdString(db_address));
@@ -82,8 +90,8 @@ private:
 
 int main()
 {
-    using namespace EFprovider;
-    auto db_provider = new CSQLightEFprovider<MCountry>("MyDBFile.db");
+    using namespace EFProvider;
+    auto db_provider = new CEFDriverSQLight<MCountry>("MyDBFile.db");
     db_provider->Initialize(new CSQLightWrapper("MyDBFile.db","MyDB"),EDatabaseType::SQLight2);
 
     QVariant aa;

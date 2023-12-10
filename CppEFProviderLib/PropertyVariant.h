@@ -4,13 +4,15 @@
 #include <stdexcept>
 
 class CVariant {
-private:
-	enum class Type {
-		INT,
-		DOUBLE,
-		STRING
-	};
 
+public:
+    enum class Type {
+        INT,
+        DOUBLE,
+        STRING
+    };
+
+private:
 	Type type_;
 	union Value {
 		int intValue;
@@ -78,6 +80,20 @@ public:
 		}
 	}
 
+    int toInt() const
+    {
+        return this->toType<int>();
+    }
+
+    double toDouble() const
+    {
+        return this->toType<double>();
+    }
+
+    std::string toString() const
+    {
+        return this->toType<std::string>();
+    }
 
 	template <typename T>
 	T operator = (CVariant value)
@@ -91,19 +107,19 @@ public:
 		}
     }
 
-	template <typename T>
-	std::string ToString()const
-	{
-		switch (this->getType())
-		{
-		case Type::DOUBLE:return std::to_string(this->getDoubleValue());
-		case Type::INT:return std::to_string(this->getIntValue());
-		case Type::STRING:return this->getStringValue();
-		default:return T();
-		}
-	}
 
 private:
+    template <typename T>
+    std::string ToString()const
+    {
+        switch (this->getType())
+        {
+        case Type::DOUBLE:return std::to_string(this->getDoubleValue());
+        case Type::INT:return std::to_string(this->getIntValue());
+        case Type::STRING:return this->getStringValue();
+        default:return T();
+        }
+    }
 	template <typename T>
 	static Type getType() {
 		if constexpr (std::is_same_v<T, int>) {

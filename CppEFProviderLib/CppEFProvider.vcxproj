@@ -132,6 +132,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,8 +144,11 @@
   <ItemGroup>
     <ClInclude Include="AbstractEFProvider.hpp" />
     <ClInclude Include="DatabaseModel.h" />
-    <ClInclude Include="EFProviderDrives.hpp" />
+    <ClInclude Include="EFDrivers\EFDriverSQLight.hpp" />
     <ClInclude Include="PropertyVariant.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EFDrivers\EFDriverPostgreSql.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

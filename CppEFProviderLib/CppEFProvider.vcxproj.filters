@@ -13,12 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="EFDrivers">
+      <UniqueIdentifier>{483d36a1-084c-45c7-a1f6-57e858180a81}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractEFProvider.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EFProviderDrives.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DatabaseModel.h">
@@ -27,5 +27,13 @@
     <ClInclude Include="PropertyVariant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EFDrivers\EFDriverSQLight.hpp">
+      <Filter>EFDrivers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EFDrivers\EFDriverPostgreSql.hpp">
+      <Filter>EFDrivers</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
