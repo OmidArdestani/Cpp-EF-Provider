@@ -6,11 +6,11 @@
 class CVariant {
 
 public:
-    enum class Type {
-        INT,
-        DOUBLE,
-        STRING
-    };
+	enum class Type {
+		INT,
+		DOUBLE,
+		STRING
+	};
 
 private:
 	Type type_;
@@ -23,7 +23,7 @@ private:
 		~Value()
 		{
 			if (stringValue) {
-//				delete stringValue;
+				//				delete stringValue;
 			}
 		}
 	} value;
@@ -80,20 +80,20 @@ public:
 		}
 	}
 
-    int toInt() const
-    {
-        return this->toType<int>();
-    }
+	int toInt() const
+	{
+		return this->toType<int>();
+	}
 
-    double toDouble() const
-    {
-        return this->toType<double>();
-    }
+	double toDouble() const
+	{
+		return this->toType<double>();
+	}
 
-    std::string toString() const
-    {
-        return this->toType<std::string>();
-    }
+	std::string toString() const
+	{
+		return this->toType<std::string>();
+	}
 
 	template <typename T>
 	T operator = (CVariant value)
@@ -105,103 +105,106 @@ public:
 		case Type::STRING:return value.getStringValue();
 		default:return T();
 		}
-    }
+	}
 
 
 private:
-    template <typename T>
-    std::string ToString()const
-    {
-        switch (this->getType())
-        {
-        case Type::DOUBLE:return std::to_string(this->getDoubleValue());
-        case Type::INT:return std::to_string(this->getIntValue());
-        case Type::STRING:return this->getStringValue();
-        default:return T();
-        }
-    }
 	template <typename T>
-	static Type getType() {
-		if constexpr (std::is_same_v<T, int>) {
+	std::string ToString()const
+	{
+		switch (this->getType())
+		{
+		case Type::DOUBLE:return std::to_string(this->getDoubleValue());
+		case Type::INT:return std::to_string(this->getIntValue());
+		case Type::STRING:return this->getStringValue();
+		default:return T();
+		}
+	}
+
+	template <typename T>
+	static Type getType() 
+	{
+		if constexpr (std::is_same_v<T, int>) 
 			return Type::INT;
-		}
-		else if constexpr (std::is_same_v<T, double>) {
+		else if constexpr (std::is_same_v<T, double>)
 			return Type::DOUBLE;
-		}
-		else if constexpr (std::is_same_v<T, std::string>) {
+		else if constexpr (std::is_same_v<T, std::string>)
 			return Type::STRING;
-		}
-		else {
-			// Handle unsupported type
-			throw std::runtime_error("Unsupported type");
-		}
+		else
+			throw std::runtime_error("Unsupported type");// Handle unsupported type
 	}
 
-	void clearValue() {
-		if (type_ == Type::STRING) {
-//			delete value.stringValue;
+	void clearValue() 
+	{
+		if (type_ == Type::STRING) 
+		{
+			//			delete value.stringValue;
 		}
 	}
 
 	template <typename T>
-	void assignValue(T newValue) {
-		if constexpr (std::is_same_v<T, int>) {
+	void assignValue(T newValue) 
+	{
+		if constexpr (std::is_same_v<T, int>)
 			value.intValue = newValue;
-		}
-		else if constexpr (std::is_same_v<T, double>) {
+		else if constexpr (std::is_same_v<T, double>)
 			value.doubleValue = newValue;
-		}
-		else if constexpr (std::is_same_v<T, std::string>) {
+		else if constexpr (std::is_same_v<T, std::string>)
 			value.stringValue = new std::string(newValue);
-		}
-		else {
-			// Handle unsupported type
-			throw std::runtime_error("Unsupported type");
-		}
+		else
+			throw std::runtime_error("Unsupported type");// Handle unsupported type
 	}
 
 	template <typename T>
-	void copyValue(const CVariant& other) {
-		if constexpr (std::is_same_v<T, int>) {
+	void copyValue(const CVariant& other)
+	{
+		if constexpr (std::is_same_v<T, int>)
 			value.intValue = other.value.intValue;
-		}
-		else if constexpr (std::is_same_v<T, double>) {
+		else if constexpr (std::is_same_v<T, double>)
 			value.doubleValue = other.value.doubleValue;
-		}
-		else if constexpr (std::is_same_v<T, std::string>) {
+		else if constexpr (std::is_same_v<T, std::string>)
 			value.stringValue = new std::string(*other.value.stringValue);
+		else
+			throw std::runtime_error("Unsupported type");// Handle unsupported type
+	}
+
+	int getIntValue() const
+	{
+		switch (type_)
+		{
+		case Type::INT:
+			return value.intValue;
+		case Type::DOUBLE:
+			return (int)value.doubleValue;
+		case Type::STRING:
+			return std::stoi(*value.stringValue);
 		}
-		else {
-			// Handle unsupported type
-			throw std::runtime_error("Unsupported type");
+	}
+
+	double getDoubleValue() const
+	{
+		switch (type_)
+		{
+		case Type::INT:
+			return (double)value.intValue;
+		case Type::DOUBLE:
+			return value.doubleValue;
+		case Type::STRING:
+			return (double)std::stof(*value.stringValue);
 		}
-    }
+	}
 
-    int getIntValue() const {
-        if (type_ == Type::INT) {
-            return value.intValue;
-        }
-        else {
-            throw std::runtime_error("Cannot convert Variant to int");
-        }
-    }
-
-    double getDoubleValue() const {
-        if (type_ == Type::DOUBLE) {
-            return value.doubleValue;
-        }
-        else {
-            throw std::runtime_error("Cannot convert Variant to double");
-        }
-    }
-
-    std::string getStringValue() const {
-        if (type_ == Type::STRING) {
-            return *value.stringValue;
-        }
-        else {
-            throw std::runtime_error("Cannot convert Variant to string");
-        }
-    }
+	std::string getStringValue() const
+	{
+		switch (type_)
+		{
+		case Type::INT:
+			return std::to_string(value.intValue);
+		case Type::DOUBLE:
+			return std::to_string(value.doubleValue);
+		case Type::STRING:
+			return *value.stringValue;
+		}
+	}
 };
 

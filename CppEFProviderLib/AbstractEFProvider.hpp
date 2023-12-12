@@ -150,7 +150,7 @@ namespace EFProvider
             if (pos != std::string::npos)
             {
                 // Erase "class" and any following spaces
-                class_typename.erase(pos, class_keyword.size()); // 5 is the length of "class"
+                class_typename.erase(pos, class_keyword.size());
             }
 
 			return class_typename;

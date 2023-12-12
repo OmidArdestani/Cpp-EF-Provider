@@ -234,7 +234,7 @@ namespace EFProvider
                 if ((contains_star == std::string::npos) && (this->ToLower(itr_item->first) != "id"))
 				{
                     table_column_list.push_back(itr_item->first);
-                    property_value_list.push_back("'" + itr_item->first + "'");
+                    property_value_list.push_back("'" + itr_item->second.toString() + "'");
 				}
 			}
 
@@ -248,7 +248,7 @@ namespace EFProvider
 
 			while (q->Next())
 			{
-				int id = q->Value(0).template toType<int>();
+                int id = q->Value(0).toInt();
 				model->SetProperty("id", id);
 			}
 

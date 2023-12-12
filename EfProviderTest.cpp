@@ -19,12 +19,10 @@ class MCountry :public CAbstractDatabaseModel
 
 public:
     MCountry() : CAbstractDatabaseModel(){}
-    void SetName(CVariant name) { Name = "Test";/*name.toType<std::string>();*/ }
-    CVariant GetName() {
-        return Name; }
-    void SetDisplay(CVariant display) { Display = "Test D";/*display.toType<std::string>();*/ }
-    CVariant GetDisplay() {
-        return Display; }
+    void SetName(CVariant name) { Name = name.toString(); }
+    CVariant GetName() {return Name; }
+    void SetDisplay(CVariant display) { Display = display.toString(); }
+    CVariant GetDisplay() {return Display; }
 };
 
 
@@ -70,11 +68,6 @@ public:
         LocalDatabase = QSqlDatabase::addDatabase("QSQLITE");
         LocalDatabase.setHostName(db_address);
         LocalDatabase.setDatabaseName(QString::fromStdString(database_name));
-//        LocalDatabase.open();
-
-//        QString cmd = "create database " + QString::fromStdString(database_name) + ";";
-//        LocalDatabase.exec(cmd);
-//        LocalDatabase.close();
     }
 
 public:
@@ -101,8 +94,8 @@ int main()
     QVariant aa;
 
     MCountry my_country;
-    my_country.SetName(CVariant()/*"Malaysia"*/);
-    my_country.SetDisplay(CVariant()/*"Malaysia In East Asia"*/);
+    my_country.SetName(std::string("Malaysia"));
+    my_country.SetDisplay(std::string("Malaysia In East Asia"));
 
     db_provider->Append(&my_country);
     db_provider->SaveChanges();
