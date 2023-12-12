@@ -127,7 +127,7 @@ namespace EFProvider
 			return temp_list;
 		}
 
-		std::list<T*> GetPagedData(int pageIndex, int numberOfItemPerPage, std::string orderByProperty) override
+        std::list<T*> GetPagedData(int pageIndex, int number_of_item_per_page, std::string orderByProperty) override
 		{
 			return std::list<T*>();
 		}
@@ -192,7 +192,7 @@ namespace EFProvider
 			auto model = static_cast<CAbstractDatabaseModel*>(item);
             assert(model);
 
-			int     id = model->GetProperty("id").toUInt();
+            int     id = model->GetProperty("id").toInt();
 			
 			std::list<std::string> property_value_list;
 
@@ -207,10 +207,14 @@ namespace EFProvider
 				}
 			}
 
-			std::string command = "update {} set {} where id={};";
-            command = std::format(command, this->TableName, this->JoinString(property_value_list, ","), std::to_string(id));
-			
+            std::string command = std::format("update {} set {} where id={};",
+                                              this->TableName,
+                                              this->JoinString(property_value_list, ","),
+                                              std::to_string(id));
+
+			this->DatabaseObject->Open();
 			this->DatabaseObject->Execute(command);
+            this->DatabaseObject->Close();
 		}
 
 		void CreateExecute(T* item) override
@@ -237,6 +241,7 @@ namespace EFProvider
 			const std::string command = "insert into " + this->GetTableName() + " (" + this->JoinString(table_column_list, ",") + ") values (" + this->JoinString(property_value_list, ", ") + ");";
 			const std::string getIdCommand = "select MAX(id) from " + this->GetTableName() + ";";
 
+			this->DatabaseObject->Open();
 			this->DatabaseObject->Execute(command);
 
 			auto q = this->DatabaseObject->Execute(getIdCommand);
@@ -246,6 +251,8 @@ namespace EFProvider
 				int id = q->Value(0).template toType<int>();
 				model->SetProperty("id", id);
 			}
+
+            this->DatabaseObject->Close();
 		}
 
 		void DeleteExecute(T* item) override
@@ -272,10 +279,14 @@ namespace EFProvider
 				}
 			}
 
-            std::string command = "update {} set {} where id= {};";
-            command = std::format(command, this->TableName, this->JoinString(property_list, ","), std::to_string(id));
+            std::string command = std::format("update {} set {} where id= {};",
+                                              this->TableName,
+                                              this->JoinString(property_list, ","),
+                                              std::to_string(id));
 
+			this->DatabaseObject->Open();
 			this->DatabaseObject->Execute(command);
+            this->DatabaseObject->Close();
 		}
 
 		bool CheckDatabaseTable() override
@@ -289,7 +300,7 @@ namespace EFProvider
 			{
 				if (this->ToLower(itr_item->first) == "id")
 				{
-					table_columns.push_back(itr_item->first + " INTEGER PRIMARY KEY AUTOINCREMENT");
+                    table_columns.push_back(itr_item->first + " INTEGER PRIMARY KEY AUTOINCREMENT");
 				}
 				else
 				{
@@ -299,7 +310,9 @@ namespace EFProvider
 
             std::string command = std::format("create table {} ({});", this->TableName, this->JoinString(table_columns, ", "));
 
+            this->DatabaseObject->Open();
 			this->DatabaseObject->Execute(command);
+            this->DatabaseObject->Close();
 
 			return true;
 		}

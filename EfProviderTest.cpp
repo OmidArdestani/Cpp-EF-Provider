@@ -53,24 +53,28 @@ private:
 class CSQLightWrapper : public CAbstractSQLDatabase
 {
 public:
-    CSQLightWrapper(std::string db_address,std::string database_name) : CAbstractSQLDatabase()
+    CSQLightWrapper(std::string db_path,std::string database_name) : CAbstractSQLDatabase()
         ,LastQuery(new QSqlQuery)
     {
         // create db file
-        QFile f(QString::fromStdString(db_address));
+        QString db_address = QString::fromStdString(database_name);
+        if(db_path != "")
+            db_address = QString::fromStdString(db_path + "\\" + database_name);
 
+        QFile f(db_address);
         if(!f.open(QIODevice::ReadWrite))
             assert(false);
+        f.close();
 
         // initialize db file
         LocalDatabase = QSqlDatabase::addDatabase("QSQLITE");
-        LocalDatabase.setHostName(QString::fromStdString(db_address));
+        LocalDatabase.setHostName(db_address);
         LocalDatabase.setDatabaseName(QString::fromStdString(database_name));
-        LocalDatabase.open();
+//        LocalDatabase.open();
 
-        QString cmd = "create database " + QString::fromStdString(database_name) + ";";
-        LocalDatabase.exec(cmd);
-        LocalDatabase.close();
+//        QString cmd = "create database " + QString::fromStdString(database_name) + ";";
+//        LocalDatabase.exec(cmd);
+//        LocalDatabase.close();
     }
 
 public:
@@ -92,7 +96,7 @@ int main()
 {
     using namespace EFProvider;
     auto db_provider = new CEFDriverSQLight<MCountry>("MyDBFile.db");
-    db_provider->Initialize(new CSQLightWrapper("MyDBFile.db","MyDB"),EDatabaseType::SQLight2);
+    db_provider->Initialize(new CSQLightWrapper("","MyDBFile.db"),EDatabaseType::SQLight2);
 
     QVariant aa;
 

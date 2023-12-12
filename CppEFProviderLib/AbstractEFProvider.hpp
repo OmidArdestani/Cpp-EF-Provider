@@ -51,9 +51,10 @@ namespace EFProvider
 			std::string result = "";
 
 			for (auto item = string_list.cbegin(); item != string_list.cend(); ++item)
-				result += *item + sep;
+                result += *item + sep;
 
-			return result;
+            result.erase(result.size() - sep.size(), sep.size());
+            return result;
 		}
 		std::string GetTableName() { return TableName; }
 		std::string ToLower(std::string str) { for (auto& x : str)x = std::tolower(x); return str; }
@@ -98,7 +99,7 @@ namespace EFProvider
 		virtual std::list<T*> Where(std::string condition) = 0;
 		virtual std::list<T*> ToList() = 0;
 		virtual std::list<T*> Top(int number) = 0;
-		virtual std::list<T*> GetPagedData(int pageIndex, int numberOfItemPerPage, std::string orderByProperty) = 0;
+		virtual std::list<T*> GetPagedData(int pageIndex, int number_of_item_per_page, std::string orderByProperty) = 0;
 		virtual int Count() = 0;
 		virtual int GetMaxID() = 0;
 
@@ -137,7 +138,23 @@ namespace EFProvider
 			ItemsToInsert.clear();
 			ItemsToDelete.clear();
 		}
-		std::string GetType() { return typeid(T).name(); }
+		std::string GetType() 
+		{
+            const std::string class_keyword = "class";
+            std::string class_typename = typeid(T).name();
+
+            // Find the position of "class" in the string
+            size_t pos = class_typename.find(class_keyword);
+
+            // Check if "class" is found
+            if (pos != std::string::npos)
+            {
+                // Erase "class" and any following spaces
+                class_typename.erase(pos, class_keyword.size()); // 5 is the length of "class"
+            }
+
+			return class_typename;
+		}
 
 	protected:
 		void UpdateModel(CAbstractDatabaseModel* model) override
