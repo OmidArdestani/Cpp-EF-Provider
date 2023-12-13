@@ -15,7 +15,7 @@ namespace EFProvider
 	class CEFDriverSQLight : public CAbstractEFProvider<T>
 	{
 	public:
-		CEFDriverSQLight(std::string database_file_name) : CAbstractEFProvider<T>()
+		CEFDriverSQLight() : CAbstractEFProvider<T>()
 		{
 		}
 
@@ -66,8 +66,8 @@ namespace EFProvider
 
 			while (q->Next())
 			{
-				//                std::list<std::string> r =  { q->Value(0).ToString() };
-				//				result_matrix.push_back(r);
+                std::list<std::string> r = { q->Value(0).toString() };
+				result_matrix.push_back(r);
 			}
 
 			LocalMutex.unlock();
@@ -91,9 +91,9 @@ namespace EFProvider
 				auto model_temp = static_cast<CAbstractDatabaseModel*>(new T);
 				auto all_property = model_temp->GetAllPropertie();
 
-				for (auto item = all_property.cbegin(); item != all_property.cend(); ++item)
+				for (auto itr_item = all_property.cbegin(); itr_item != all_property.cend(); ++itr_item)
 				{
-					model_temp->SetProperty(item->first, item->second);
+					model_temp->SetProperty(itr_item->first, q->Value(itr_item->first));
 				}
 				model_temp_list.push_back(static_cast<T*>(model_temp));
 			}
@@ -108,7 +108,32 @@ namespace EFProvider
 
 		std::list<T*> ToList() override
 		{
-			return std::list<T*>();
+			// save all changes befor make list
+			std::list<T*> temp_list;
+			std::string command = "select * from " + this->TableName + ";";
+
+			// Complete query.
+			this->DatabaseObject->Open();
+			auto q = this->DatabaseObject->Execute(command);
+
+			while (q->Next())
+			{
+                auto model_temp = static_cast<CAbstractDatabaseModel*>(new T());
+				auto all_property = model_temp->GetAllPropertie();
+
+				for (auto itr_item = all_property.cbegin(); itr_item != all_property.cend(); ++itr_item)
+				{
+                    model_temp->SetProperty(itr_item->first, q->Value(itr_item->first));
+				}
+                temp_list.push_back(static_cast<T*>(model_temp));
+			}
+			this->DatabaseObject->Close();
+			
+			for(auto item = temp_list.cbegin(); item != temp_list.cend(); ++item)
+			{
+                this->UpdateRelationships(*item);
+			}
+			return temp_list;
 		}
 
 		std::list<T*> Top(int number) override
@@ -127,7 +152,7 @@ namespace EFProvider
 			return temp_list;
 		}
 
-        std::list<T*> GetPagedData(int pageIndex, int number_of_item_per_page, std::string orderByProperty) override
+		std::list<T*> GetPagedData(int pageIndex, int number_of_item_per_page, std::string orderByProperty) override
 		{
 			return std::list<T*>();
 		}
@@ -135,7 +160,7 @@ namespace EFProvider
 		int Count() override
 		{
 			std::string command;
-			int     count = 0;
+			int count = 0;
 
 			command = "select count(id) from " + this->TableName + ";";
 
@@ -182,7 +207,7 @@ namespace EFProvider
 			case CVariant::Type::DOUBLE: return "float";
 			case CVariant::Type::STRING:return "char(50)";
 			default:
-                assert(false);
+				assert(false);
 				return "";
 			}
 		}
@@ -190,31 +215,32 @@ namespace EFProvider
 		void UpdateExecute(T* item) override
 		{
 			auto model = static_cast<CAbstractDatabaseModel*>(item);
-            assert(model);
+			assert(model);
 
-            int     id = model->GetProperty("id").toInt();
-			
+			int     id = model->GetProperty("id").toInt();
+
 			std::list<std::string> property_value_list;
 
-			auto all_props = model->GetAllPropertie();
-			for (auto itr_item = all_props.cbegin(); itr_item != all_props.cend(); ++itr_item)
+            auto all_property = model->GetAllPropertie();
+
+			for (auto itr_item = all_property.cbegin(); itr_item != all_property.cend(); ++itr_item)
 			{
 				if (this->ToLower(itr_item->first) != "id")
 				{
 					std::string prop_name = itr_item->first;
 					std::string prop_value = itr_item->second.toString();
-                    property_value_list.push_back(std::format("{}='{}'", prop_name, prop_value));
+					property_value_list.push_back(std::format("{}='{}'", prop_name, prop_value));
 				}
 			}
 
-            std::string command = std::format("update {} set {} where id={};",
-                                              this->TableName,
-                                              this->JoinString(property_value_list, ","),
-                                              std::to_string(id));
+			std::string command = std::format("update {} set {} where id={};",
+				this->TableName,
+				this->JoinString(property_value_list, ","),
+				std::to_string(id));
 
 			this->DatabaseObject->Open();
 			this->DatabaseObject->Execute(command);
-            this->DatabaseObject->Close();
+			this->DatabaseObject->Close();
 		}
 
 		void CreateExecute(T* item) override
@@ -223,18 +249,19 @@ namespace EFProvider
 			std::list<std::string> table_column_list;
 
 			auto model = static_cast<CAbstractDatabaseModel*>(item);
-            assert(model);
+			assert(model);
 
-			auto all_props = model->GetAllPropertie();
-			for (auto itr_item = all_props.cbegin(); itr_item != all_props.cend(); ++itr_item)
+            auto all_property = model->GetAllPropertie();
+
+			for (auto itr_item = all_property.cbegin(); itr_item != all_property.cend(); ++itr_item)
 			{
 				// check if the object is not a relationship object.
-                auto contains_star = itr_item->first.find('*');
+				auto contains_star = itr_item->first.find('*');
 				// check if propertie is not id. Becouse the id always is a auto incremental..
-                if ((contains_star == std::string::npos) && (this->ToLower(itr_item->first) != "id"))
+				if ((contains_star == std::string::npos) && (this->ToLower(itr_item->first) != "id"))
 				{
-                    table_column_list.push_back(itr_item->first);
-                    property_value_list.push_back("'" + itr_item->second.toString() + "'");
+					table_column_list.push_back(itr_item->first);
+					property_value_list.push_back("'" + itr_item->second.toString() + "'");
 				}
 			}
 
@@ -248,24 +275,25 @@ namespace EFProvider
 
 			while (q->Next())
 			{
-                int id = q->Value(0).toInt();
+				int id = q->Value(0).toInt();
 				model->SetProperty("id", id);
 			}
 
-            this->DatabaseObject->Close();
+			this->DatabaseObject->Close();
 		}
 
 		void DeleteExecute(T* item) override
 		{
 			auto model = static_cast<CAbstractDatabaseModel*>(item);
-            assert(model);
+			assert(model);
 
-            int     id = model->GetProperty("id").toInt();
+			int     id = model->GetProperty("id").toInt();
 
 			std::list<std::string> property_list;
 
-			auto all_props = model->GetAllPropertie();
-			for (auto itr_item = all_props.cbegin(); itr_item != all_props.cend(); ++itr_item)
+            auto all_property = model->GetAllPropertie();
+
+			for (auto itr_item = all_property.cbegin(); itr_item != all_property.cend(); ++itr_item)
 			{
 				if (this->ToLower(itr_item->first) != "id")
 				{
@@ -279,14 +307,14 @@ namespace EFProvider
 				}
 			}
 
-            std::string command = std::format("update {} set {} where id= {};",
-                                              this->TableName,
-                                              this->JoinString(property_list, ","),
-                                              std::to_string(id));
+			std::string command = std::format("update {} set {} where id= {};",
+				this->TableName,
+				this->JoinString(property_list, ","),
+				std::to_string(id));
 
 			this->DatabaseObject->Open();
 			this->DatabaseObject->Execute(command);
-            this->DatabaseObject->Close();
+			this->DatabaseObject->Close();
 		}
 
 		bool CheckDatabaseTable() override
@@ -295,12 +323,13 @@ namespace EFProvider
 			std::list<std::string> table_columns;
 			CAbstractDatabaseModel* new_model = static_cast<CAbstractDatabaseModel*>(new T);
 
-			auto all_props = new_model->GetAllPropertie();
-			for (auto itr_item = all_props.cbegin(); itr_item != all_props.cend(); ++itr_item)
+            auto all_property = new_model->GetAllPropertie();
+
+			for (auto itr_item = all_property.cbegin(); itr_item != all_property.cend(); ++itr_item)
 			{
 				if (this->ToLower(itr_item->first) == "id")
 				{
-                    table_columns.push_back(itr_item->first + " INTEGER PRIMARY KEY AUTOINCREMENT");
+					table_columns.push_back(itr_item->first + " INTEGER PRIMARY KEY AUTOINCREMENT");
 				}
 				else
 				{
@@ -308,11 +337,11 @@ namespace EFProvider
 				}
 			}
 
-            std::string command = std::format("create table {} ({});", this->TableName, this->JoinString(table_columns, ", "));
+			std::string command = std::format("create table {} ({});", this->TableName, this->JoinString(table_columns, ", "));
 
-            this->DatabaseObject->Open();
+			this->DatabaseObject->Open();
 			this->DatabaseObject->Execute(command);
-            this->DatabaseObject->Close();
+			this->DatabaseObject->Close();
 
 			return true;
 		}

@@ -27,6 +27,7 @@ namespace EFProvider
 	public:
 		virtual bool Next() = 0;
 		virtual CVariant Value(int index) = 0;
+		virtual CVariant Value(std::string key) = 0;
 	};
 
 	class CAbstractSQLDatabase

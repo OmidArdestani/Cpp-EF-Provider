@@ -7,12 +7,12 @@
 #include <functional>
 #include "PropertyVariant.h"
 
-class CBatabaseModelPrivate;
+class CAbstractDatabaseModel;
 
 struct RelationshipItem
 {
 	std::string ForeignKey = "";
-	CBatabaseModelPrivate* RelModel = nullptr;
+    CAbstractDatabaseModel* RelModel = nullptr;
 };
 
 #define GET_CLASS_NAME() ( _Function_class_)
@@ -116,8 +116,8 @@ private:
 	std::map<std::string, PropContainer*> PropertyMap;
 	std::list<RelationshipItem> RelationshipList;
 
-	REGISTER_PROPERTY(int, Id, CAbstractDatabaseModel, &CAbstractDatabaseModel::SetId, &CAbstractDatabaseModel::GetId)
+    REGISTER_PROPERTY(int, id, CAbstractDatabaseModel, &CAbstractDatabaseModel::SetId, &CAbstractDatabaseModel::GetId)
 public:
-	virtual CVariant GetId() { return Id; };
-	virtual void SetId(CVariant id) { Id = id.toType<int>(); }
+    virtual CVariant GetId() { return this->id; }
+    virtual void SetId(CVariant id) { this->id = id.toType<int>(); }
 };
