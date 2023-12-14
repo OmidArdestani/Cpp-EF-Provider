@@ -111,31 +111,49 @@ private:
 int main()
 {
     using namespace EFProvider;
+
+    // construct db providers
     auto country_db_provider = new CEFDriverSQLight<Country>();
     auto area_region_db_provider = new CEFDriverSQLight<AreaRegion>();
 
+    // initialize db connection for providers
     auto sql_connection = new CSQLightWrapper("","MyDBFile.db");
     country_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
     area_region_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
 
+    // initialize relationships
     SDatabaseRelationship rel;
     rel.EFProvider = country_db_provider;
     rel.ForeignKey = "CountryId";
     area_region_db_provider->AddRelationship(rel);
 
-    Country my_country;
-    my_country.SetName(std::string("Malaysia"));
-    my_country.SetDisplay(std::string("Malaysia In East Asia"));
+    //-------------------------------------------
+    //-------------------------------------------
+    //-------------------------------------------
 
-    country_db_provider->Append(&my_country);
-    country_db_provider->SaveChanges();
+//    Country my_country;
+//    my_country.SetName(std::string("Malaysia"));
+//    my_country.SetDisplay(std::string("Malaysia In East Asia"));
 
-    AreaRegion my_reg;
-    my_reg.SetName(std::string("Asia"));
-    my_reg.SetCountryId(my_country.id);
+//    country_db_provider->Append(&my_country);
+//    country_db_provider->SaveChanges();
 
-    area_region_db_provider->Append(&my_reg);
-    area_region_db_provider->SaveChanges();
+//    AreaRegion my_reg;
+//    my_reg.SetName(std::string("Asia"));
+//    my_reg.SetCountryId(my_country.id);
+
+//    area_region_db_provider->Append(&my_reg);
+//    area_region_db_provider->SaveChanges();
+
+    auto all_area = area_region_db_provider->ToList();
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"Area ID |"<<"Area Name |"<<"Country Id |"<<"Country Display";
+    foreach (auto item, all_area) {
+        qDebug() << item->GetId().toInt() << "\t"
+                 << QString::fromStdString(item->GetName().toString()) << "\t"
+                 << item->GetCountryId().toInt() << "\t"
+                 << QString::fromStdString(item->GetCountry()->GetDisplay().toString());
+    }
 
     std::cout << "Hello World!\n";
 }

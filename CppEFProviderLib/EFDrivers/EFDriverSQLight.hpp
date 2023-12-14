@@ -35,7 +35,7 @@ namespace EFProvider
 			int topIndex = GetMaxID();
 			T* temp_model = Find(topIndex);
 
-			this->UpdateRelationships(temp_model);
+            this->UpdateWithRelationships(temp_model);
 			return temp_model;
 		}
 
@@ -100,7 +100,7 @@ namespace EFProvider
 
 			for (auto item = model_temp_list.cbegin(); item != model_temp_list.cend(); ++item)
 			{
-				this->UpdateRelationships(*item);
+                this->UpdateWithRelationships(*item);
 			}
 			LocalMutex.unlock();
 			return model_temp_list;
@@ -131,7 +131,7 @@ namespace EFProvider
 			
 			for(auto item = temp_list.cbegin(); item != temp_list.cend(); ++item)
 			{
-                this->UpdateRelationships(*item);
+                this->UpdateWithRelationships(*item);
 			}
 			return temp_list;
 		}
@@ -146,7 +146,7 @@ namespace EFProvider
 			{
 				auto temp = Find(i);
 
-				this->UpdateRelationships(temp);
+                this->UpdateWithRelationships(temp);
 				temp_list.push_back(temp);
 			}
 			return temp_list;

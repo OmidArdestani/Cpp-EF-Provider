@@ -1,6 +1,7 @@
 #pragma once
 #include <list>
 #include <string>
+#include <assert.h>
 #include "DatabaseModel.h"
 
 namespace EFProvider
@@ -60,17 +61,18 @@ namespace EFProvider
 		std::string GetTableName() { return TableName; }
 		std::string ToLower(std::string str) { for (auto& x : str)x = std::tolower(x); return str; }
 
-	protected:
+    public:
+        virtual void UpdateModel(CAbstractDatabaseModel* model) = 0;
+        virtual void CreateModel(CAbstractDatabaseModel* model) = 0;
+        virtual CAbstractDatabaseModel* FindModel(int foreign_key) = 0;
+        virtual CAbstractDatabaseModel* GetById(int id) = 0;
+
+    protected:
 		std::list<SDatabaseRelationship> Relationships;
 		CAbstractSQLDatabase* DatabaseObject = nullptr;
 		std::string TableName;
-		EDatabaseType DBType;
 
-	protected:
-		virtual void UpdateModel(CAbstractDatabaseModel* model) = 0;
-		virtual void CreateModel(CAbstractDatabaseModel* model) = 0;
-		virtual CAbstractDatabaseModel* FindModel(int foreign_key) = 0;
-		virtual CAbstractDatabaseModel* GetById(int id) = 0;
+		EDatabaseType DBType;
 	};
 
 	//*************************************
@@ -163,22 +165,40 @@ namespace EFProvider
 			this->UpdateExecute(static_cast<T*>(model));
 			this->SaveChanges();
 		}
+
 		void CreateModel(CAbstractDatabaseModel* model) override
 		{
 			this->Append(static_cast<T*>(model));
 			this->SaveChanges();
 		}
+
 		CAbstractDatabaseModel* FindModel(int foreign_key) override
 		{
 			return static_cast<CAbstractDatabaseModel*>(Find(foreign_key));
 		}
+
 		CAbstractDatabaseModel* GetById(int id) override
 		{
 			return new CAbstractDatabaseModel();
 		}
+
 		void UpdateRelationships(T* item)
-		{
+        {
+            for (auto rel = Relationships.cbegin(); rel != Relationships.cend(); ++rel)
+            {
+                auto model = static_cast<CAbstractDatabaseModel*>(item);
+                assert(model);
+
+                auto rel_model = model->GetRelationship<CAbstractDatabaseModel>(rel->ForeignKey);
+
+                // check rel validation
+                if (rel_model->GetProperty("id").toInt() > -1)
+                {
+                    rel->EFProvider->UpdateModel(rel_model);
+                }
+            }
 		}
+
 		void UpdateWithRelationships(T* item)
 		{
 			// set relationship
@@ -186,8 +206,8 @@ namespace EFProvider
 			{
 				auto item_obj = static_cast<CAbstractDatabaseModel*>(item);
 
-				std::string foreignKey = item_obj->GetProperty(rel->ForeignKey);
-				auto        temp = rel->EFProvider->FindModel(std::stoi(foreignKey));
+                int foreignKey = item_obj->GetProperty(rel->ForeignKey).toInt();
+                auto        temp = rel->EFProvider->FindModel(foreignKey);
 				RelationshipItem rel_item;
 
 				rel_item.RelModel = temp;
