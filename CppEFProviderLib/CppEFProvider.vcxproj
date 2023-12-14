@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EFDrivers\AbstractCommonDatabaseCommand.hpp" />
     <ClInclude Include="AbstractEFProvider.hpp" />
     <ClInclude Include="DatabaseModel.h" />
     <ClInclude Include="EFDrivers\EFDriverSQLight.hpp" />

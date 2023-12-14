@@ -30,6 +30,9 @@
     <ClInclude Include="EFDrivers\EFDriverSQLight.hpp">
       <Filter>EFDrivers</Filter>
     </ClInclude>
+    <ClInclude Include="EFDrivers\AbstractCommonDatabaseCommand.hpp">
+      <Filter>EFDrivers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EFDrivers\EFDriverPostgreSql.hpp">

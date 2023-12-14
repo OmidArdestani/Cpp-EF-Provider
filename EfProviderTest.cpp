@@ -128,7 +128,7 @@ int main()
     area_region_db_provider->AddRelationship(rel);
 
     //-------------------------------------------
-    //-------------------------------------------
+    //----------------Feed data test-------------
     //-------------------------------------------
 
 //    Country my_country;
@@ -145,7 +145,13 @@ int main()
 //    area_region_db_provider->Append(&my_reg);
 //    area_region_db_provider->SaveChanges();
 
+    //-------------------------------------------
+    //----------Model relationship test----------
+    //-------------------------------------------
+
     auto all_area = area_region_db_provider->ToList();
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"---------------ToList test--------------";
     qDebug() <<"----------------------------------------";
     qDebug() <<"Area ID |"<<"Area Name |"<<"Country Id |"<<"Country Display";
     foreach (auto item, all_area) {
@@ -155,5 +161,54 @@ int main()
                  << QString::fromStdString(item->GetCountry()->GetDisplay().toString());
     }
 
-    std::cout << "Hello World!\n";
+    //-------------------------------------------
+    //-----------------Query test----------------
+    //-------------------------------------------
+
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"----------Single Or Default test--------";
+    qDebug() <<"----------------------------------------";
+    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
+    auto malaysia_country = country_db_provider->SingleOrDefault("Name == 'Malaysia'");
+
+    qDebug() << malaysia_country->GetId().toInt() << "\t"
+             << QString::fromStdString(malaysia_country->GetName().toString()) << "\t"
+             << QString::fromStdString(malaysia_country->GetDisplay().toString());
+
+
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"---------------Where test---------------";
+    qDebug() <<"----------------------------------------";
+    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
+    auto greater_id = country_db_provider->Where("Id > 4");
+
+    foreach (auto item, greater_id) {
+        qDebug() << item->GetId().toInt() << "\t"
+                 << QString::fromStdString(item->GetName().toString()) << "\t"
+                 << QString::fromStdString(item->GetDisplay().toString());
+    }
+
+
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"-----------------Top test---------------";
+    qDebug() <<"----------------------------------------";
+    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
+    auto top_countries = country_db_provider->Top(4);
+
+    foreach (auto item, top_countries) {
+        qDebug() << item->GetId().toInt() << "\t"
+                 << QString::fromStdString(item->GetName().toString()) << "\t"
+                 << QString::fromStdString(item->GetDisplay().toString());
+    }
+
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"-----------------Find test---------------";
+    qDebug() <<"----------------------------------------";
+    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
+    auto find_id = country_db_provider->Find(4);
+
+    qDebug() << find_id->GetId().toInt() << "\t"
+             << QString::fromStdString(find_id->GetName().toString()) << "\t"
+             << QString::fromStdString(find_id->GetDisplay().toString());
+
 }
