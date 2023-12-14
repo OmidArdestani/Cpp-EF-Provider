@@ -44,10 +44,10 @@ public:
 
 namespace EFProvider{
 
-class QSqlQueryWrapper : public CAbstracSqlDataBaseQuery
+class CQSqlQueryWrapper : public CAbstracSqlDataBaseQuery
 {
 public:
-    QSqlQueryWrapper(QSqlQuery* q) : LocalQuery(q) {}
+    CQSqlQueryWrapper(QSqlQuery* q) : LocalQuery(q) {}
 
     bool Next() override
     {
@@ -99,7 +99,7 @@ public:
     CAbstracSqlDataBaseQuery* Execute(std::string cmd) override
     {
         *LastQuery = LocalDatabase.exec(QString::fromStdString(cmd));
-        return new QSqlQueryWrapper(LastQuery);
+        return new CQSqlQueryWrapper(LastQuery);
     }
 
 private:
@@ -131,28 +131,31 @@ int main()
     //----------------Feed data test-------------
     //-------------------------------------------
 
-//    Country my_country;
-//    my_country.SetName(std::string("Malaysia"));
-//    my_country.SetDisplay(std::string("Malaysia In East Asia"));
+    // Add a country in the Countrys table
+    Country my_country;
+    my_country.SetName(std::string("Malaysia"));
+    my_country.SetDisplay(std::string("Malaysia In East Asia"));
 
-//    country_db_provider->Append(&my_country);
-//    country_db_provider->SaveChanges();
+    country_db_provider->Append(&my_country);
+    country_db_provider->SaveChanges();
 
-//    AreaRegion my_reg;
-//    my_reg.SetName(std::string("Asia"));
-//    my_reg.SetCountryId(my_country.id);
+    // Add a region in the AreaRegions table
+    AreaRegion my_reg;
+    my_reg.SetName(std::string("Asia"));
+    my_reg.SetCountryId(my_country.id);
 
-//    area_region_db_provider->Append(&my_reg);
-//    area_region_db_provider->SaveChanges();
+    area_region_db_provider->Append(&my_reg);
+    area_region_db_provider->SaveChanges();
 
     //-------------------------------------------
-    //----------Model relationship test----------
+    //-----------------Query test----------------
     //-------------------------------------------
 
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"---------------ToList Query-------------";
+    qDebug() <<"----------------------------------------";
     auto all_area = area_region_db_provider->ToList();
-    qDebug() <<"----------------------------------------";
-    qDebug() <<"---------------ToList test--------------";
-    qDebug() <<"----------------------------------------";
+
     qDebug() <<"Area ID |"<<"Area Name |"<<"Country Id |"<<"Country Display";
     foreach (auto item, all_area) {
         qDebug() << item->GetId().toInt() << "\t"
@@ -161,12 +164,8 @@ int main()
                  << QString::fromStdString(item->GetCountry()->GetDisplay().toString());
     }
 
-    //-------------------------------------------
-    //-----------------Query test----------------
-    //-------------------------------------------
-
     qDebug() <<"----------------------------------------";
-    qDebug() <<"----------Single Or Default test--------";
+    qDebug() <<"----------Single Or Default Query-------";
     qDebug() <<"----------------------------------------";
     qDebug() << "Country Id |" << "Country Name |" << "Country Display";
     auto malaysia_country = country_db_provider->SingleOrDefault("Name == 'Malaysia'");
@@ -177,7 +176,7 @@ int main()
 
 
     qDebug() <<"----------------------------------------";
-    qDebug() <<"---------------Where test---------------";
+    qDebug() <<"---------------Where Query--------------";
     qDebug() <<"----------------------------------------";
     qDebug() << "Country Id |" << "Country Name |" << "Country Display";
     auto greater_id = country_db_provider->Where("Id > 4");
@@ -190,7 +189,7 @@ int main()
 
 
     qDebug() <<"----------------------------------------";
-    qDebug() <<"-----------------Top test---------------";
+    qDebug() <<"-----------------Top Query--------------";
     qDebug() <<"----------------------------------------";
     qDebug() << "Country Id |" << "Country Name |" << "Country Display";
     auto top_countries = country_db_provider->Top(4);
@@ -202,7 +201,7 @@ int main()
     }
 
     qDebug() <<"----------------------------------------";
-    qDebug() <<"-----------------Find test---------------";
+    qDebug() <<"-----------------Find Query-------------";
     qDebug() <<"----------------------------------------";
     qDebug() << "Country Id |" << "Country Name |" << "Country Display";
     auto find_id = country_db_provider->Find(4);
