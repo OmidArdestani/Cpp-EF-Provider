@@ -1,6 +1,6 @@
 # C++ Entity Framework Provider
 
-[![Build Status](https://github.com/Omid91a/CppEFProvider/actions/workflows/msbuild.yml/badge.svg)](https://github.com/Omid91a/CppEFProvider/actions)
+[![Build Status](https://github.com/OmidArdestani/CppEFProvider/actions/workflows/msbuild.yml/badge.svg)](https://github.com/OmidArdestani/CppEFProvider/actions)
 
 
 ## Description
@@ -249,5 +249,5 @@ After running the section 3 code, a row will be added to the "Country" table.
 ```
 
 ## Library Class Diagram (UML)
-![EF-Provider Class Diagram](https://github.com/Omid91a/CppEFProvider/blob/main/CppEFProviderLib/Class%20Driagram.png)
+![EF-Provider Class Diagram](https://github.com/OmidArdestani/CppEFProvider/blob/main/CppEFProviderLib/Class%20Driagram.png)
 
