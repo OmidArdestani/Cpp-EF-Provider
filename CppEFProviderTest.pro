@@ -1,6 +1,6 @@
-QT += core sql
+QT += core sql testlib
 
-CONFIG += c++2a
+CONFIG += c++2a testcase no_testcase_installs
 
 TEMPLATE = app
 

@@ -108,34 +108,50 @@ private:
 };
 }
 
-int main()
+class IntegrationTests: public QObject
 {
-    using namespace EFProvider;
-    auto country_db_provider = new CEFDriverSQLight<Country>();
-    auto area_region_db_provider = new CEFDriverSQLight<AreaRegion>();
+	Q_OBJECT
+private slots:
+	void RelationTest()
+	{
+		using namespace EFProvider;
+		auto country_db_provider = new CEFDriverSQLight<Country>();
+		auto area_region_db_provider = new CEFDriverSQLight<AreaRegion>();
 
-    auto sql_connection = new CSQLightWrapper("","MyDBFile.db");
-    country_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
-    area_region_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
+		auto sql_connection = new CSQLightWrapper("","MyDBFile.db");
+		country_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
+		area_region_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
 
-    SDatabaseRelationship rel;
-    rel.EFProvider = country_db_provider;
-    rel.ForeignKey = "CountryId";
-    area_region_db_provider->AddRelationship(rel);
+		SDatabaseRelationship rel;
+		rel.EFProvider = country_db_provider;
+		rel.ForeignKey = "CountryId";
+		area_region_db_provider->AddRelationship(rel);
 
-    Country my_country;
-    my_country.SetName(std::string("Malaysia"));
-    my_country.SetDisplay(std::string("Malaysia In East Asia"));
+		Country my_country;
+		my_country.SetName(std::string("Malaysia"));
+		my_country.SetDisplay(std::string("Malaysia In East Asia"));
 
-    country_db_provider->Append(&my_country);
-    country_db_provider->SaveChanges();
+		country_db_provider->Append(&my_country);
+		country_db_provider->SaveChanges();
 
-    AreaRegion my_reg;
-    my_reg.SetName(std::string("Asia"));
-    my_reg.SetCountryId(my_country.id);
+		AreaRegion my_reg;
+		my_reg.SetName(std::string("Asia"));
+		my_reg.SetCountryId(my_country.id);
 
-    area_region_db_provider->Append(&my_reg);
-    area_region_db_provider->SaveChanges();
+		area_region_db_provider->Append(&my_reg);
+		area_region_db_provider->SaveChanges();
 
-    std::cout << "Hello World!\n";
-}
+		auto area{area_region_db_provider->LastItem()};
+
+		auto name{area->GetName()};
+		auto country{area->GetCountry()};
+
+		QCOMPARE(name, QVariant("Asia"));
+		QCOMPARE(country->Name, QVariant("Malaysia"));
+		QCOMPARE(country->Display, QVariant("Malaysia In East Asia"));
+
+		delete area;
+		delete country_db_provider;
+		delete area_region_db_provider;
+	}
+};
