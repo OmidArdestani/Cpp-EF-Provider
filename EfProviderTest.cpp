@@ -108,6 +108,80 @@ private:
 };
 }
 
+void ToListTest(EFProvider::CEFDriverSQLight<AreaRegion>* area_regin_ef)
+{
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"---------------ToList Query-------------";
+    qDebug() <<"----------------------------------------";
+    auto all_area = area_regin_ef->ToList();
+
+    qDebug() <<"Area ID |"<<"Area Name |"<<"Country Id |"<<"Country Display";
+    foreach (auto item, all_area) {
+        qDebug() << item->GetId().toInt() << "\t"
+                 << QString::fromStdString(item->GetName().toString()) << "\t"
+                 << item->GetCountryId().toInt() << "\t"
+                 << QString::fromStdString(item->GetCountry()->GetDisplay().toString());
+    }
+
+}
+
+void SingleOrDefaultTest(EFProvider::CEFDriverSQLight<Country>* coutry_ef)
+{
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"----------Single Or Default Query-------";
+    qDebug() <<"----------------------------------------";
+    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
+    auto malaysia_country = coutry_ef->SingleOrDefault("Name == 'Malaysia'");
+
+    qDebug() << malaysia_country->GetId().toInt() << "\t"
+             << QString::fromStdString(malaysia_country->GetName().toString()) << "\t"
+             << QString::fromStdString(malaysia_country->GetDisplay().toString());
+}
+
+void WhereTest(EFProvider::CEFDriverSQLight<Country>* coutry_ef)
+{
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"---------------Where Query--------------";
+    qDebug() <<"----------------------------------------";
+    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
+    auto greater_id = coutry_ef->Where("Id > 4");
+
+    foreach (auto item, greater_id) {
+        qDebug() << item->GetId().toInt() << "\t"
+                 << QString::fromStdString(item->GetName().toString()) << "\t"
+                 << QString::fromStdString(item->GetDisplay().toString());
+    }
+
+}
+
+void TopTest(EFProvider::CEFDriverSQLight<Country>* coutry_ef)
+{
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"-----------------Top Query--------------";
+    qDebug() <<"----------------------------------------";
+    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
+    auto top_countries = coutry_ef->Top(4);
+
+    foreach (auto item, top_countries) {
+        qDebug() << item->GetId().toInt() << "\t"
+                 << QString::fromStdString(item->GetName().toString()) << "\t"
+                 << QString::fromStdString(item->GetDisplay().toString());
+    }
+}
+
+void FindTest(EFProvider::CEFDriverSQLight<Country>* coutry_ef)
+{
+    qDebug() <<"----------------------------------------";
+    qDebug() <<"-----------------Find Query-------------";
+    qDebug() <<"----------------------------------------";
+    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
+    auto find_id = coutry_ef->Find(4);
+
+    qDebug() << find_id->GetId().toInt() << "\t"
+             << QString::fromStdString(find_id->GetName().toString()) << "\t"
+             << QString::fromStdString(find_id->GetDisplay().toString());
+}
+
 int main()
 {
     using namespace EFProvider;
@@ -150,64 +224,8 @@ int main()
     //-------------------------------------------
     //-----------------Query test----------------
     //-------------------------------------------
-
-    qDebug() <<"----------------------------------------";
-    qDebug() <<"---------------ToList Query-------------";
-    qDebug() <<"----------------------------------------";
-    auto all_area = area_region_db_provider->ToList();
-
-    qDebug() <<"Area ID |"<<"Area Name |"<<"Country Id |"<<"Country Display";
-    foreach (auto item, all_area) {
-        qDebug() << item->GetId().toInt() << "\t"
-                 << QString::fromStdString(item->GetName().toString()) << "\t"
-                 << item->GetCountryId().toInt() << "\t"
-                 << QString::fromStdString(item->GetCountry()->GetDisplay().toString());
-    }
-
-    qDebug() <<"----------------------------------------";
-    qDebug() <<"----------Single Or Default Query-------";
-    qDebug() <<"----------------------------------------";
-    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
-    auto malaysia_country = country_db_provider->SingleOrDefault("Name == 'Malaysia'");
-
-    qDebug() << malaysia_country->GetId().toInt() << "\t"
-             << QString::fromStdString(malaysia_country->GetName().toString()) << "\t"
-             << QString::fromStdString(malaysia_country->GetDisplay().toString());
-
-
-    qDebug() <<"----------------------------------------";
-    qDebug() <<"---------------Where Query--------------";
-    qDebug() <<"----------------------------------------";
-    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
-    auto greater_id = country_db_provider->Where("Id > 4");
-
-    foreach (auto item, greater_id) {
-        qDebug() << item->GetId().toInt() << "\t"
-                 << QString::fromStdString(item->GetName().toString()) << "\t"
-                 << QString::fromStdString(item->GetDisplay().toString());
-    }
-
-
-    qDebug() <<"----------------------------------------";
-    qDebug() <<"-----------------Top Query--------------";
-    qDebug() <<"----------------------------------------";
-    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
-    auto top_countries = country_db_provider->Top(4);
-
-    foreach (auto item, top_countries) {
-        qDebug() << item->GetId().toInt() << "\t"
-                 << QString::fromStdString(item->GetName().toString()) << "\t"
-                 << QString::fromStdString(item->GetDisplay().toString());
-    }
-
-    qDebug() <<"----------------------------------------";
-    qDebug() <<"-----------------Find Query-------------";
-    qDebug() <<"----------------------------------------";
-    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
-    auto find_id = country_db_provider->Find(4);
-
-    qDebug() << find_id->GetId().toInt() << "\t"
-             << QString::fromStdString(find_id->GetName().toString()) << "\t"
-             << QString::fromStdString(find_id->GetDisplay().toString());
-
+    SingleOrDefaultTest(country_db_provider);
+    WhereTest(country_db_provider);
+    TopTest(country_db_provider);
+    FindTest(country_db_provider);
 }
