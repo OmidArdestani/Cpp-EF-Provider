@@ -108,124 +108,77 @@ private:
 };
 }
 
-void ToListTest(EFProvider::CEFDriverSQLight<AreaRegion>* area_regin_ef)
+class EFProviderBasicTests: public QObject
 {
-    qDebug() <<"----------------------------------------";
-    qDebug() <<"---------------ToList Query-------------";
-    qDebug() <<"----------------------------------------";
-    auto all_area = area_regin_ef->ToList();
+    Q_OBJECT
+private slots:
+    void initTestCase()
+    {
+        QFile::remove("MyDBFile.db");
+    }
+    void creationTest()
+    {
+        // given
+        using namespace EFProvider;
+        auto country_db_provider = std::make_unique<CEFDriverSQLight<Country>>();
+        auto area_region_db_provider = std::make_unique<CEFDriverSQLight<AreaRegion>>();
 
-    qDebug() <<"Area ID |"<<"Area Name |"<<"Country Id |"<<"Country Display";
-    foreach (auto item, all_area) {
-        qDebug() << item->GetId().toInt() << "\t"
-                 << QString::fromStdString(item->GetName().toString()) << "\t"
-                 << item->GetCountryId().toInt() << "\t"
-                 << QString::fromStdString(item->GetCountry()->GetDisplay().toString());
+        auto sql_connection = std::make_unique<CSQLightWrapper>("","MyDBFile.db");
+        country_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
+        area_region_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
+
+        SDatabaseRelationship rel;
+        rel.EFProvider = country_db_provider;
+        rel.ForeignKey = "CountryId";
+        area_region_db_provider->AddRelationship(rel);
+
+        // when
+        country_db_provider->SaveChanges();
+        area_region_db_provider->SaveChanges();
+
+        // then
+        QFile db("MyDBFile.db");
+        QVERIFY(db.exists());
     }
 
-}
+    void addRecordTest()
+    {
+        using namespace EFProvider;
 
-void SingleOrDefaultTest(EFProvider::CEFDriverSQLight<Country>* coutry_ef)
-{
-    qDebug() <<"----------------------------------------";
-    qDebug() <<"----------Single Or Default Query-------";
-    qDebug() <<"----------------------------------------";
-    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
-    auto malaysia_country = coutry_ef->SingleOrDefault("Name == 'Malaysia'");
+        // given
+        auto country_db_provider = std::make_unique<CEFDriverSQLight<Country>>();
+        auto area_region_db_provider = std::make_unique<CEFDriverSQLight<AreaRegion>>();
 
-    qDebug() << malaysia_country->GetId().toInt() << "\t"
-             << QString::fromStdString(malaysia_country->GetName().toString()) << "\t"
-             << QString::fromStdString(malaysia_country->GetDisplay().toString());
-}
+        auto sql_connection = std::make_unique<CSQLightWrapper>("","MyDBFile.db");
+        country_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
+        area_region_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
 
-void WhereTest(EFProvider::CEFDriverSQLight<Country>* coutry_ef)
-{
-    qDebug() <<"----------------------------------------";
-    qDebug() <<"---------------Where Query--------------";
-    qDebug() <<"----------------------------------------";
-    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
-    auto greater_id = coutry_ef->Where("Id > 4");
+        SDatabaseRelationship rel;
+        rel.EFProvider = country_db_provider;
+        rel.ForeignKey = "CountryId";
+        area_region_db_provider->AddRelationship(rel);
 
-    foreach (auto item, greater_id) {
-        qDebug() << item->GetId().toInt() << "\t"
-                 << QString::fromStdString(item->GetName().toString()) << "\t"
-                 << QString::fromStdString(item->GetDisplay().toString());
+        // when
+        Country my_country;
+        my_country.SetName(std::string("Malaysia"));
+        my_country.SetDisplay(std::string("Malaysia In East Asia"));
+
+        country_db_provider->Append(&my_country);
+        country_db_provider->SaveChanges();
+
+        AreaRegion my_reg;
+        my_reg.SetName(std::string("Asia"));
+        my_reg.SetCountryId(my_country.id);
+
+        area_region_db_provider->Append(&my_reg);
+        area_region_db_provider->SaveChanges();
+
+        // then
+        auto all_area = country_db_provider->ToList();
+        QVERIFY(all_area.size() == 1);
+        QCOMPARE(all_area.at(0)->GetId().toInt(), 0);
+        QCOMPARE(all_area.at(0)->GetName().toString(), "Asia");
+        QCOMPARE(all_area.at(0)->GetCountryId().toInt(), 0);
+        QCOMPARE(all_area.at(0)->GetCountry()->GetDisplay().toString(), "Malaysia");
     }
-
-}
-
-void TopTest(EFProvider::CEFDriverSQLight<Country>* coutry_ef)
-{
-    qDebug() <<"----------------------------------------";
-    qDebug() <<"-----------------Top Query--------------";
-    qDebug() <<"----------------------------------------";
-    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
-    auto top_countries = coutry_ef->Top(4);
-
-    foreach (auto item, top_countries) {
-        qDebug() << item->GetId().toInt() << "\t"
-                 << QString::fromStdString(item->GetName().toString()) << "\t"
-                 << QString::fromStdString(item->GetDisplay().toString());
-    }
-}
-
-void FindTest(EFProvider::CEFDriverSQLight<Country>* coutry_ef)
-{
-    qDebug() <<"----------------------------------------";
-    qDebug() <<"-----------------Find Query-------------";
-    qDebug() <<"----------------------------------------";
-    qDebug() << "Country Id |" << "Country Name |" << "Country Display";
-    auto find_id = coutry_ef->Find(4);
-
-    qDebug() << find_id->GetId().toInt() << "\t"
-             << QString::fromStdString(find_id->GetName().toString()) << "\t"
-             << QString::fromStdString(find_id->GetDisplay().toString());
-}
-
-int main()
-{
-    using namespace EFProvider;
-
-    // construct db providers
-    auto country_db_provider = new CEFDriverSQLight<Country>();
-    auto area_region_db_provider = new CEFDriverSQLight<AreaRegion>();
-
-    // initialize db connection for providers
-    auto sql_connection = new CSQLightWrapper("","MyDBFile.db");
-    country_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
-    area_region_db_provider->Initialize(sql_connection, EDatabaseType::SQLight2);
-
-    // initialize relationships
-    SDatabaseRelationship rel;
-    rel.EFProvider = country_db_provider;
-    rel.ForeignKey = "CountryId";
-    area_region_db_provider->AddRelationship(rel);
-
-    //-------------------------------------------
-    //----------------Feed data test-------------
-    //-------------------------------------------
-
-    // Add a country in the Countrys table
-    Country my_country;
-    my_country.SetName(std::string("Malaysia"));
-    my_country.SetDisplay(std::string("Malaysia In East Asia"));
-
-    country_db_provider->Append(&my_country);
-    country_db_provider->SaveChanges();
-
-    // Add a region in the AreaRegions table
-    AreaRegion my_reg;
-    my_reg.SetName(std::string("Asia"));
-    my_reg.SetCountryId(my_country.id);
-
-    area_region_db_provider->Append(&my_reg);
-    area_region_db_provider->SaveChanges();
-
-    //-------------------------------------------
-    //-----------------Query test----------------
-    //-------------------------------------------
-    SingleOrDefaultTest(country_db_provider);
-    WhereTest(country_db_provider);
-    TopTest(country_db_provider);
-    FindTest(country_db_provider);
-}
+};
