@@ -79,4 +79,5 @@ jobs:
       - name: (9) Running tests
         working-directory: ${{ runner.temp }}\build
         run: |
+            cd release
             ${{ github.workspace }} ${{env.SOURCE_PROJECT_NAME}}.exe
