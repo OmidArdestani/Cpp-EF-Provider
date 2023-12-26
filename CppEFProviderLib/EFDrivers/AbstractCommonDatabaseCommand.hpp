@@ -17,7 +17,7 @@ namespace EFProvider
 	public:
 		CAbstractCommonDatabaseCommand() : CAbstractEFProvider<T>()
 		{
-		}
+        }
 
 	public:
 		T* SingleOrDefault(std::string condition) override

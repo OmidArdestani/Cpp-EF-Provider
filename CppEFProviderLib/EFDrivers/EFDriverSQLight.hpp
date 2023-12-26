@@ -282,7 +282,7 @@ namespace EFProvider
 			{
 				if (this->ToLower(itr_item->first) == "id")
 				{
-					table_columns.push_back(itr_item->first + " SERIAL PRIMARY KEY");
+                    table_columns.push_back(itr_item->first + " INTEGER PRIMARY KEY AUTOINCREMENT");
 				}
 				else
 				{

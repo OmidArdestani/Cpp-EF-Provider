@@ -1,8 +1,8 @@
-QT += core sql
+QT += core sql widgets testlib
 
 CONFIG += c++2a
 
-TEMPLATE = app
+#TEMPLATE = app
 
 SOURCES +=\
 	EfProviderTest.cpp

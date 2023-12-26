@@ -34,7 +34,8 @@ namespace EFProvider
 	class CAbstractSQLDatabase
 	{
 	public:
-		CAbstractSQLDatabase() {}
+        CAbstractSQLDatabase() {}
+        virtual ~CAbstractSQLDatabase() = default;
 
 	public:
 		virtual bool Open() = 0;
@@ -47,6 +48,8 @@ namespace EFProvider
 	class CBaseEFProvider
 	{
 	public:
+        virtual ~CBaseEFProvider() = default;  // Virtual destructor
+
 		void AddRelationship(SDatabaseRelationship relationship) { Relationships.push_back(relationship); }
 		std::string JoinString(std::list<std::string> string_list, std::string sep)
 		{
@@ -155,6 +158,8 @@ namespace EFProvider
                 // Erase "class" and any following spaces
                 class_typename.erase(pos, class_keyword.size());
             }
+
+            class_typename.erase(std::remove_if(class_typename.begin(), class_typename.end(), ::isspace), class_typename.end());
 
 			return class_typename;
 		}
