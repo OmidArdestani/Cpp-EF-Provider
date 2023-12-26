@@ -17,7 +17,7 @@ defaults:
     shell: cmd
 
 env:
-  SOURCE_PROJECT_NAME:   WorldTime
+  SOURCE_PROJECT_NAME:   CppEFProviderTest
   QT_VERSION:   5.15.2
 
 jobs:
@@ -78,4 +78,4 @@ jobs:
 
       - name: (9) Running tests
         working-directory: ${{ runner.temp }}\build
-        run:  .\CppEFProviderTest.exe
+        run:  .\${{env.SOURCE_PROJECT_NAME}}.exe
