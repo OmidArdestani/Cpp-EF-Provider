@@ -80,4 +80,4 @@ jobs:
         working-directory: ${{ runner.temp }}\build
         run: |
             cd release
-            ${{ github.workspace }} ${{env.SOURCE_PROJECT_NAME}}.exe
+            ${{env.SOURCE_PROJECT_NAME}}.exe
