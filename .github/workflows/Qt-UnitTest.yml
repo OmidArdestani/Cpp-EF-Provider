@@ -79,5 +79,4 @@ jobs:
       - name: (9) Running tests
         working-directory: ${{ runner.temp }}\build
         run: |
-            cd release
-            ${{env.SOURCE_PROJECT_NAME}}.exe
+            ${{ runner.temp }}\build\release\${{env.SOURCE_PROJECT_NAME}}.exe
