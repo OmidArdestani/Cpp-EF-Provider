@@ -78,4 +78,4 @@ jobs:
 
       - name: (9) Running tests
         working-directory: ${{ runner.temp }}\build
-        run:  CppEFProviderTest.exe
+        run:  .\CppEFProviderTest.exe
