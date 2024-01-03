@@ -1,4 +1,4 @@
-# C++ Entity Framework Provider
+# C++ Entity Framework Provider (Cpp EF Provider) (CppEFProvider)
 
 [![Build Status](https://github.com/OmidArdestani/CppEFProvider/actions/workflows/msbuild.yml/badge.svg)](https://github.com/OmidArdestani/CppEFProvider/actions)
 
