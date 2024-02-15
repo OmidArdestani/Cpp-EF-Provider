@@ -105,6 +105,7 @@ private:
 	struct PropContainer
 	{
 		PropContainer() {}
+        ~PropContainer() {delete Setter; delete Getter;}
 		PropContainer(std::function<void(CVariant)>* setter, std::function<CVariant()>* getter)
 		{
 			this->Setter = setter;
@@ -113,7 +114,7 @@ private:
 		std::function<void(CVariant)>* Setter = nullptr;
 		std::function<CVariant()>* Getter = nullptr;
 	};
-	std::map<std::string, PropContainer*> PropertyMap;
+	std::map<std::string, std::unique_ptr<PropContainer>> PropertyMap;
 	std::list<RelationshipItem> RelationshipList;
 
     REGISTER_PROPERTY(int, id, CAbstractDatabaseModel, &CAbstractDatabaseModel::SetId, &CAbstractDatabaseModel::GetId)
