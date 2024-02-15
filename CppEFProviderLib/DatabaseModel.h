@@ -98,7 +98,7 @@ public:
 
 	void RegisterProperty(std::string property_name, std::function<void(CVariant)>* setter, std::function<CVariant()>* getter)
 	{
-		PropertyMap.insert_or_assign(property_name, new PropContainer(setter, getter));
+        PropertyMap.insert_or_assign(property_name, std::make_unique<PropContainer>(setter, getter));
 	}
 
 private:
