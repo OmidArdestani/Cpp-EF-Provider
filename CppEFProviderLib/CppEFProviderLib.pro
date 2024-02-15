@@ -7,11 +7,11 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 HEADERS += \
-    AbstractEFProvider.h \
+    AbstractEFProvider.hpp \
     DatabaseModel.h \
+    EFDrivers/AbstractCommonDatabaseCommand.hpp \
+    EFDrivers/EFDriverPostgreSql.hpp \
+    EFDrivers/EFDriverSQLight.hpp \
     EFProviderDrives.h \
     PropertyVariant.h
 
-SOURCES += \
-    AbstractEFProvider.cpp \
-    EFProviderDrives.cpp
