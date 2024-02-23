@@ -1,6 +1,5 @@
 #include <iostream>
 #include "EFDrivers/EFDriverSQLight.hpp"
-#include "MyModels.h"
 #include <AbstractEFProvider.hpp>
 
 #include <QSqlQuery>
@@ -113,15 +112,8 @@ class EFProviderBasicTests: public QObject
     Q_OBJECT
 
 private:
-    // std::unique_ptr<EFProvider::CEFDriverSQLight<Country>> CountryDBProvider;
-    // std::unique_ptr<EFProvider::CEFDriverSQLight<AreaRegion>> AreaRegionDBProvider;
-    std::unique_ptr<EFProvider::CEFDriverSQLight<LunchOption>> LunchOptionDBProvider;
-    std::unique_ptr<EFProvider::CEFDriverSQLight<Menu>>        MenuDBProvider;
-    std::unique_ptr<EFProvider::CEFDriverSQLight<Order>>       OrderDBProvider;
-    std::unique_ptr<EFProvider::CEFDriverSQLight<OrderMenu>>   OrderMenuDBProvider;
-    std::unique_ptr<EFProvider::CEFDriverSQLight<Transaction>> TransactionDBProvider;
-    std::unique_ptr<EFProvider::CEFDriverSQLight<User>>        UserDBProvider;
-    std::unique_ptr<EFProvider::CEFDriverSQLight<UserRule>>    UserRuleDBProvider;
+    std::unique_ptr<EFProvider::CEFDriverSQLight<Country>> CountryDBProvider;
+    std::unique_ptr<EFProvider::CEFDriverSQLight<AreaRegion>> AreaRegionDBProvider;
 
 private slots:
     void initTestCase()
@@ -130,113 +122,88 @@ private slots:
 
         QFile::remove(DATABASE_FILE_NAME);
 
-        LunchOptionDBProvider = std::make_unique<EFProvider::CEFDriverSQLight<LunchOption>>();
-        MenuDBProvider        = std::make_unique<EFProvider::CEFDriverSQLight<Menu>>       ();
-        OrderDBProvider       = std::make_unique<EFProvider::CEFDriverSQLight<Order>>      ();
-        OrderMenuDBProvider   = std::make_unique<EFProvider::CEFDriverSQLight<OrderMenu>>  ();
-        TransactionDBProvider = std::make_unique<EFProvider::CEFDriverSQLight<Transaction>>();
-        UserDBProvider        = std::make_unique<EFProvider::CEFDriverSQLight<User>>       ();
-        UserRuleDBProvider    = std::make_unique<EFProvider::CEFDriverSQLight<UserRule>>   ();
-
+        CountryDBProvider = std::make_unique<CEFDriverSQLight<Country>>();
+        AreaRegionDBProvider = std::make_unique<CEFDriverSQLight<AreaRegion>>();
 
         auto sql_connection = new CSQLightWrapper("","MyDBFile.db");
-        LunchOptionDBProvider ->Initialize(sql_connection, EDatabaseType::SQLight2);
-        MenuDBProvider        ->Initialize(sql_connection, EDatabaseType::SQLight2);
-        OrderDBProvider       ->Initialize(sql_connection, EDatabaseType::SQLight2);
-        OrderMenuDBProvider   ->Initialize(sql_connection, EDatabaseType::SQLight2);
-        TransactionDBProvider ->Initialize(sql_connection, EDatabaseType::SQLight2);
-        UserDBProvider        ->Initialize(sql_connection, EDatabaseType::SQLight2);
-        UserRuleDBProvider    ->Initialize(sql_connection, EDatabaseType::SQLight2);
-
+        CountryDBProvider->Initialize(sql_connection, EDatabaseType::SQLight2);
+        AreaRegionDBProvider->Initialize(sql_connection, EDatabaseType::SQLight2);
     }
-    // void initTestCase()
-    // {
-    //     using namespace EFProvider;
 
-    //     QFile::remove(DATABASE_FILE_NAME);
+    void CreationTest()
+    {
+        // given
+        using namespace EFProvider;
 
-    //     CountryDBProvider = std::make_unique<CEFDriverSQLight<Country>>();
-    //     AreaRegionDBProvider = std::make_unique<CEFDriverSQLight<AreaRegion>>();
+        SDatabaseRelationship rel;
+        rel.EFProvider = CountryDBProvider.get();
+        rel.ForeignKey = "CountryId";
+        AreaRegionDBProvider->AddRelationship(rel);
 
-    //     auto sql_connection = new CSQLightWrapper("","MyDBFile.db");
-    //     CountryDBProvider->Initialize(sql_connection, EDatabaseType::SQLight2);
-    //     AreaRegionDBProvider->Initialize(sql_connection, EDatabaseType::SQLight2);
-    // }
+        // when
+        Country my_country;
+        my_country.SetName(std::string("Malaysia"));
+        my_country.SetDisplay(std::string("Malaysia In East Asia"));
 
-    // void CreationTest()
-    // {
-    //     // given
-    //     using namespace EFProvider;
+        CountryDBProvider->Append(&my_country);
+        CountryDBProvider->SaveChanges();
 
-    //     SDatabaseRelationship rel;
-    //     rel.EFProvider = CountryDBProvider.get();
-    //     rel.ForeignKey = "CountryId";
-    //     AreaRegionDBProvider->AddRelationship(rel);
+        AreaRegion my_reg;
+        my_reg.SetName(std::string("Asia"));
+        my_reg.SetCountryId(my_country.GetId());
 
-    //     // when
-    //     Country my_country;
-    //     my_country.SetName(std::string("Malaysia"));
-    //     my_country.SetDisplay(std::string("Malaysia In East Asia"));
+        AreaRegionDBProvider->Append(&my_reg);
+        AreaRegionDBProvider->SaveChanges();
 
-    //     CountryDBProvider->Append(&my_country);
-    //     CountryDBProvider->SaveChanges();
+        // then
+        QFile db(DATABASE_FILE_NAME);
+        QVERIFY(db.exists());
+    }
 
-    //     AreaRegion my_reg;
-    //     my_reg.SetName(std::string("Asia"));
-    //     my_reg.SetCountryId(my_country.GetId());
+    void ToListFunctionTest()
+    {
+        auto all_area = AreaRegionDBProvider->ToList();
 
-    //     AreaRegionDBProvider->Append(&my_reg);
-    //     AreaRegionDBProvider->SaveChanges();
+        QVERIFY(all_area.size() == 1);
+        QCOMPARE(all_area.front()->GetId().toInt(), 1);
+        QCOMPARE(all_area.front()->GetName().toString(), "Asia");
+        QCOMPARE(all_area.front()->GetCountryId().toInt(), 1);
+        QCOMPARE(all_area.front()->GetCountry()->GetDisplay().toString(), "Malaysia In East Asia");
+    }
 
-    //     // then
-    //     QFile db(DATABASE_FILE_NAME);
-    //     QVERIFY(db.exists());
-    // }
+    void SingleOrDefaultTest()
+    {
+        auto malaysia_country = CountryDBProvider->SingleOrDefault("Name == 'Malaysia'");
 
-    // void ToListFunctionTest()
-    // {
-    //     auto all_area = AreaRegionDBProvider->ToList();
+        QCOMPARE(malaysia_country->GetId().toInt(), 1);
+        QCOMPARE(malaysia_country->GetName().toString(), "Malaysia");
+    }
 
-    //     QVERIFY(all_area.size() == 1);
-    //     QCOMPARE(all_area.front()->GetId().toInt(), 1);
-    //     QCOMPARE(all_area.front()->GetName().toString(), "Asia");
-    //     QCOMPARE(all_area.front()->GetCountryId().toInt(), 1);
-    //     QCOMPARE(all_area.front()->GetCountry()->GetDisplay().toString(), "Malaysia In East Asia");
-    // }
+    void WhereTest()
+    {
+        auto greater_id = CountryDBProvider->Where("Id > 0");
 
-    // void SingleOrDefaultTest()
-    // {
-    //     auto malaysia_country = CountryDBProvider->SingleOrDefault("Name == 'Malaysia'");
+        QVERIFY(greater_id.size() == 1);
+        QCOMPARE(greater_id.front()->GetId().toInt(), 1);
+        QCOMPARE(greater_id.front()->GetName().toString(), "Malaysia");
+    }
 
-    //     QCOMPARE(malaysia_country->GetId().toInt(), 1);
-    //     QCOMPARE(malaysia_country->GetName().toString(), "Malaysia");
-    // }
+    void TopTest()
+    {
+        auto top_countries = CountryDBProvider->Top(4);
 
-    // void WhereTest()
-    // {
-    //     auto greater_id = CountryDBProvider->Where("Id > 0");
+        QVERIFY(top_countries.size() == 4);
+        QCOMPARE(top_countries.front()->GetId().toInt(), 1);
+        QCOMPARE(top_countries.front()->GetName().toString(), "Malaysia");
+    }
 
-    //     QVERIFY(greater_id.size() == 1);
-    //     QCOMPARE(greater_id.front()->GetId().toInt(), 1);
-    //     QCOMPARE(greater_id.front()->GetName().toString(), "Malaysia");
-    // }
+    void FindTest()
+    {
+        auto find_id = CountryDBProvider->Find(1);
 
-    // void TopTest()
-    // {
-    //     auto top_countries = CountryDBProvider->Top(4);
-
-    //     QVERIFY(top_countries.size() == 4);
-    //     QCOMPARE(top_countries.front()->GetId().toInt(), 1);
-    //     QCOMPARE(top_countries.front()->GetName().toString(), "Malaysia");
-    // }
-
-    // void FindTest()
-    // {
-    //     auto find_id = CountryDBProvider->Find(1);
-
-    //     QCOMPARE(find_id->GetId().toInt(), 1);
-    //     QCOMPARE(find_id->GetName().toString(), "Malaysia");
-    // }
+        QCOMPARE(find_id->GetId().toInt(), 1);
+        QCOMPARE(find_id->GetName().toString(), "Malaysia");
+    }
 };
 
 QTEST_MAIN(EFProviderBasicTests)

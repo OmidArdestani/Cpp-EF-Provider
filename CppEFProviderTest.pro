@@ -10,8 +10,7 @@ HEADERS += \
     CppEFProviderLib/DatabaseModel.h \
     CppEFProviderLib/EFDrivers/AbstractCommonDatabaseCommand.hpp \
     CppEFProviderLib/EFDrivers/EFDriverPostgreSql.hpp \
-    CppEFProviderLib/EFDrivers/EFDriverSQLight.hpp \
-    MyModels.h
+    CppEFProviderLib/EFDrivers/EFDriverSQLight.hpp
 
 INCLUDEPATH += CppEFProviderLib
 
